@@ -1,13 +1,9 @@
 import numpy as np
-from datasets import load_metric
-from dataset_tokenizer import tokenized_datasets
-from train import trainer
+from evaluate import load
 
-# Evaluation
-predictions = trainer.predict(tokenized_datasets['validation'])
-print(predictions.predictions.shape, predictions.label_ids.shape)
+metric = load('glue', 'mrpc')
 
-# Metrics
-metric = load_metric('glue', 'mrpc')
-preds = np.argmaxx(predictions.predictions, axis=-1)
-print(metric.compute(predictions=preds, references=predictions.label_ids))
+def compute_metrics(eval_preds):
+  logits, labels = eval_preds
+  predictions = np.argmax(logits, axis=-1)
+  return metric.compute(predictions=predictions, references=labels)

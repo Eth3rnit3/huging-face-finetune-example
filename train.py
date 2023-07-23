@@ -1,5 +1,6 @@
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 from dataset_tokenizer import tokenized_datasets, checkpoint, data_collator, tokenizer
+from evaluator import compute_metrics
 
 model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=2)
 
@@ -19,7 +20,8 @@ trainer = Trainer(
   train_dataset=tokenized_datasets['train'],
   eval_dataset=tokenized_datasets['validation'],
   data_collator=data_collator,
-  tokenizer=tokenizer
+  tokenizer=tokenizer,
+  compute_metrics=compute_metrics
 )
 
 trainer.train()
